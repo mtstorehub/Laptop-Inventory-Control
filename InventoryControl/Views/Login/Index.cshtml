@@ -1,0 +1,53 @@
+﻿@model InventoryControl.Models.Login
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <style>
+        .field-valation-error{color:red;}
+    </style>
+</head>
+<body>
+    <div id="login-div">
+        @using (Html.BeginForm("Authorize","Login",FormMethod.Post))
+            {
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Welcome to my site</h3>
+                            </div>
+                            <div class="panel-body">
+                                <form role="form">
+                                    <fieldset>
+                                        <div class="form-group">
+                                            <label>@Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })</label>
+                                            @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                                        </div>
+                                        <div class="form-group">
+                                            <label>@Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })</label>
+                                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="field-valation-error">@Html.DisplayFor(model => model.LoginErrorMessage)</label>
+                                        </div>
+                                         
+                                        <input type="submit" name="name" value="Login" class="btn btn-primary" />
+                                        <p>New Member? <a href="#" class="">@Html.ActionLink("Register", "Create", "Users")</a></p>
+</fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</body>
+
+</html>
