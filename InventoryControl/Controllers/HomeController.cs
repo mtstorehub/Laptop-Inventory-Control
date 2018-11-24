@@ -26,5 +26,15 @@ namespace InventoryControl.Controllers
 
             return View();
         }
+
+        public ActionResult Products(string id)
+        {
+            return RedirectToAction("Products", "Laptops", new { id = id });
+        }
+
+        public ActionResult Profile(string id)
+        {
+            return RedirectToAction("Details", "Users", new { id = id });
+        }
     }
 }

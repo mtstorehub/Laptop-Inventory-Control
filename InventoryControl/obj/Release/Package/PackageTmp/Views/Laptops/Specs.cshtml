@@ -1,0 +1,108 @@
+﻿@model InventoryControl.Models.Laptop
+
+@{
+    ViewBag.Title = "Specifications";
+}
+
+<h2>Specifications</h2>
+
+<div>
+    <h4>Laptop</h4>
+    <hr />
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CATEGORY)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.CATEGORY)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CPU)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.CPU)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.RAM)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.RAM)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.CPU_MODEL)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.CPU_MODEL)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.STORAGE)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.STORAGE)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.SCREEN)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.SCREEN)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.OS)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.OS)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.OTHER_SPEC)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.OTHER_SPEC)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.PRICE)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.PRICE)
+                    </dd>
+                    
+                </dl>
+            </div>
+            <div class="col-md-3">
+                <br />
+                @{ var path = @Html.ValueFor(model => model.Name) + ".jpg";}
+                <img src="~/Images/Laptops/@path" alt="Avatar" width="300" height="200" style="border:groove;border-style:groove;">
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Back to Products", "Products", new { id = Session["UserChoice"], page = Session["CurrentPageIndex"] })
+</p>

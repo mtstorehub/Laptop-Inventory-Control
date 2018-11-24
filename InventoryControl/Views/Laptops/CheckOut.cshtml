@@ -1,0 +1,127 @@
+﻿
+@{
+    ViewBag.Title = "CheckOut";
+}
+
+<script>
+    function disPlayAllCookies() {
+        if (localStorage.length <= 0)
+            return "<h2>No choice items</h2> <button class='btn btn-success' onclick='back_to_shop()'>Back to Shop</button>";
+        var key, value;
+        var res = "";
+        var total_cost = 0;
+        document.getElementById("buy_items").innerHTML = localStorage.length;
+        res = "<table width='50%' class='table table-condensed'><tr><th>Name</th><th>Quantity</th><th>Price</th><th>Total</th></tr>";
+        for (i = 0; i < localStorage.length; i++) {
+            key = localStorage.key(i);
+            value = localStorage.getItem(key);
+            res += "<tr>";
+            var price = value.trim().split("/")[0];
+            var qty = value.trim().split("/")[1];
+            var model = value.trim().split("/")[2];
+            res += "<td><h4>" + key + "</h4><br><p>" + model + "</p></td>";
+            res += "<td>" + qty + "</td>";
+            res += "<td>$ " + price + "</td>";
+            res += "<td>$ " + (qty * price) + "</td>";
+            total_cost += Number(qty * price);
+            res += "</tr>";
+        }
+        res += "<tr><td><button class='btn btn-default' onclick='back_to_shop()'>Back to Shop</button></td><td colspan='2'></td><td align='left'>Total - $ " + total_cost + "<br><br><button class='btn btn-success' onClick='CheckOut()'>Check Out</button></td></tr>";
+        res += "</table>";
+        return res;
+    }
+
+
+    function CheckOut() {
+        var isUser = '@Session["userName"]';
+        if (isUser == "") {
+            if (localStorage.length > 0) {//present add to cart
+                //take flag to be present
+                $.post('@Url.Action("RunAction", "Laptops")',
+                        {
+                            value: "1"
+                        }
+                    );
+            }
+            window.location.href = "Login/Index";
+            return;
+        }
+
+
+        //prepare cart items
+        var cart_info = "";
+        for (i = 0; i < localStorage.length; i++) {
+            let key = localStorage.key(i);
+            let value = localStorage.getItem(key);
+            let id = value.trim().split("/")[3];
+            let qty = value.trim().split("/")[1];
+
+            cart_info += id + '-' + qty + ',';
+        }
+        //decrease Qty
+        $.post('@Url.Action("DecreaseQuantity", "Laptops")',
+                {
+                    _laptopList: cart_info
+                }
+            );
+
+        //prepare orders
+        var order_info = "";
+        var charge = 0;
+        for (i = 0; i < localStorage.length; i++) {
+            let key = localStorage.key(i);
+            let value = localStorage.getItem(key);
+            let name = key;
+            let price = value.trim().split("/")[0];
+            let qty = value.trim().split("/")[1];
+            let total = Number(price) * Number(qty);
+            order_info += name + ',' + qty + ',' + total + '#';
+            charge += total;
+        }
+        //take insert orders into db
+        $.post('@Url.Action("TakeOrder", "Orders")',
+                {
+                    _orderNo: getOrderNo(),
+                    _purchaseTime: PurchasedTime(),
+                    _shipToName: isUser,
+                    _shipAddress: '@Session["userAddress"]',
+                    _charge: charge,
+                    _orderList: order_info
+                }
+            );
+
+        //go to Purchase order page
+        window.location.href = "PurchaseOrder";
+
+    }
+
+    function back_to_shop() {
+        document.location = '@Url.Action("Products","Laptops", new { id = Session["UserChoice"], page = Session["CurrentPageIndex"] })';
+    }
+
+    function PurchasedTime() {
+        var month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+        var now = new Date();
+        let date = ((now.getDate() / 10) < 1) ? '0' + now.getDate() : now.getDate();
+        let time = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
+        let part = (now.getHours() < 12) ? "AM" : "PM";
+        let PurchasedTime = month[now.getMonth()] + " " + date + ", " + now.getFullYear() + " " + time + part;
+        return PurchasedTime;
+    }
+
+    function getOrderNo() {
+        return parseInt(new Date().getTime() % 100000);
+    }
+
+</script>
+
+<h2>Checkout Shopping Cart</h2>
+
+<div id="content" class="container">
+    hello
+</div>
+
+<script>
+    document.getElementById("content").innerHTML = disPlayAllCookies();
+        
+</script>

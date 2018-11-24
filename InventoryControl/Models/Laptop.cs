@@ -13,7 +13,7 @@ namespace InventoryControl.Models
         public int Laptop_ID { get; set; }
         public Category CATEGORY { get; set; }
         public string Name { get; set; }
-        public string CUP { get; set; }
+        public string CPU { get; set; }
         public string RAM { get; set; }
         public string CPU_MODEL { get; set; }
         public string STORAGE { get; set; }
@@ -23,6 +23,9 @@ namespace InventoryControl.Models
 
         [DisplayName("Price ($)")]
         public int PRICE { get; set; }
+
+        [DisplayName("Qty")]
+        public int QTY { get; set; }
 
     }
 

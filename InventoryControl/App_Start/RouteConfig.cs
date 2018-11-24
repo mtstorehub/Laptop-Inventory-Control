@@ -16,8 +16,21 @@ namespace InventoryControl
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
+                defaults: new { controller = "Laptops", action = "Home", id = "" }
+            );
+
+            routes.MapRoute(
+                name: "Products",
+                url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Laptops", action = "Products", id = UrlParameter.Optional }
             );
+
+            routes.MapRoute(
+                name: "Details",
+                url: "{controller}/{action}/{id}",
+                defaults: new { controller = "Users", action = "Details", id = UrlParameter.Optional }
+            );
+
         }
     }
 }

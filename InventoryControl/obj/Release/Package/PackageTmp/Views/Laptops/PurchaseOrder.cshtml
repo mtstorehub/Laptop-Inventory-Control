@@ -1,0 +1,152 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    h2{color:#6D90EF;}
+    h1{color:#283592;}
+    span{font-weight:lighter}
+    label{text-decoration:underline;cursor:pointer;}
+    .bg-info{background-color:powderblue;color:purple;}
+</style>
+
+<div class="container">
+    <h2>Your Company</h2>
+    <p class="text-muted">
+        123 Your Street,<br />
+        Your City,<br />
+        (123) 456-7891
+    </p>
+    
+    <h1>Checkout Order</h1>
+    <table class="table table-responsive">
+        <tr>
+            <th>Date</th>
+            <th>Invoice</th>
+            <th>P.O number</th>
+        </tr>
+        <tr>
+            <td id="today" class="text-muted">
+                5/4/2018
+            </td>
+            <td class="text-muted">
+                #123456
+            </td>
+            <td class="text-muted">
+                12345678
+            </td>
+        </tr>        
+    </table>
+    
+    <table class="table table-responsive">
+        <tr>
+            <th>Vendor<br /><span class="text-muted">Name</span></th>
+            <th>Ship to<br/><span class="text-muted" id="customerName">Your Name</span></th>
+        </tr>
+        <tr>
+            <td>
+                Company Name<br />Street address<br/>City,State,Zip<br />(123)875-7598<br/>yourcompany@gmail.com
+            </td>
+            <td>
+                <span id="customerAddress">Your address </span><br/> <span id="customerPhno">Your phno</span>
+            </td>
+        </tr>
+    </table>
+
+    <table class="table table-striped" id="item_orders">       
+    </table>
+</div>
+
+<script>
+
+
+
+    var item_order = document.getElementById("item_orders");
+    let table_result = "<tr><th>Item#</th><th>Name</th><th>Qty</th><th>Unit Price</th><th>Total Price</th></tr>";
+    let total_cost = 0;
+    let key, value;
+
+    for (i = 0; i < localStorage.length; i++) {
+        key = localStorage.key(i);
+        value = localStorage.getItem(key);
+        table_result += "<tr>";
+        var price = value.trim().split("/")[0];
+        var qty = value.trim().split("/")[1];
+        table_result += "<td>Item " + (i + 1) + "</td>";
+        table_result += "<td>" + key + "</td>";
+        table_result += "<td>" + qty + "</td>";
+        table_result += "<td>$" + price + "</td>";
+        table_result += "<td>$ " + (qty * price) + "</td>";
+        total_cost += Number(qty * price);
+        table_result += "</tr>";
+    }
+    table_result += "<tr><td></td><td colspan='3'><h3 class='bg-info'>We will deliver within 3 days</h3></td><td align='left'>Total - $ " + total_cost + "<br><br><a href='#' onClick='GoBack_Shop()'><label class='text-primary'>Go Back Shop</label></a></td></tr></table>";
+
+    item_order.innerHTML = table_result;
+    //set today
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+
+    var yyyy = today.getFullYear();
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+    if (mm < 10) {
+        mm = '0' + mm;
+    }
+    var today = dd + '/' + mm + '/' + yyyy;
+    document.getElementById("today").innerHTML = today;
+
+    //set customer
+    document.getElementById("customerName").innerHTML = '@Session["userName"]';
+    //set address
+    document.getElementById("customerAddress").innerHTML = '@Session["userAddress"]';
+    //set phone number
+    document.getElementById("customerPhno").innerHTML = '@Session["userPhno"]';
+
+    //before delete localStorage, remember orders as cookie for three days
+    let data = "";
+    let prev_data = "";
+    let cookieArray = document.cookie.toString().trim().split(";");
+
+    //keep previous data
+    for (var i = 1; i < cookieArray.length; i++) {
+        let name = cookieArray[i].trim().split("=")[0].toString();
+        if ('@Session["userName"]' == name) {//already taken order user            
+            prev_data = cookieArray[i].trim().split("=")[1];
+            break;
+        }
+    }
+    //add prev data
+    data += prev_data;
+    for (i = 0; i < localStorage.length; i++) {        
+        let key = localStorage.key(i);
+        let value = localStorage.getItem(key);
+        data += key + "/" + value + "&";
+    }
+
+    setCookie('@Session["userName"]', data, 3);//after 3 days is expired
+
+
+    //delete orders
+    localStorage.clear();
+
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+
+    function GoBack_Shop() {
+        $.post('@Url.Action("RunAction", "Login")',
+               {
+                   value: 2 //2 is situation after previous orders are showed
+               }
+           );
+        window.location.href = "Products";
+    }
+
+
+</script>

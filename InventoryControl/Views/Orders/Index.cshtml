@@ -1,0 +1,105 @@
+﻿@model IEnumerable<InventoryControl.Models.Orders>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Order Items</h2>
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Order Lists</h4>
+            </div>
+            <div class="modal-body">
+                <p id="order-data">Order error</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<input type="hidden" class="btn btn-info btn-lg" data-toggle="modal" id="open-modal" data-target="#myModal">
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Order_NO)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Purchased_On)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Customer_Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Customer_Address)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Charges)
+        </th>
+        <th>
+            Action
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Order_NO)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Purchased_On)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Customer_Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Customer_Address)
+        </td>
+        <td>
+            $ @Html.DisplayFor(modelItem => item.Charges)
+        </td>
+        <td>
+            @Html.ActionLink("Deliver", "RemoveOrder", new { id = item.Order_ID }, htmlAttributes: new { @class = "btn btn-xs btn-primary" })
+            <button class="btn btn-xs btn-info" onclick="modalClick('@item.Order_Items')">Details</button>           
+        </td>
+    </tr>
+}
+
+</table>
+
+<script>
+
+    document.getElementById("the_home").className = "";
+    var tabViewOrder = document.getElementById("the_viewOrder");
+    tabViewOrder.className = "active";
+
+    var modal = document.getElementById("open-modal");
+
+    function modalClick(_orderItems) {
+        var order_data = document.getElementById("order-data");
+        var data = "<table class='table table-responsive' width=60% cellpadding=10px>";
+        data += "<tr>";
+        data += "<th>Name</th><th>Quantity</th><th>Total Charge</th>";
+        data += "</tr>";
+        let itemsLine = _orderItems.split("#");//get items list            
+        for (var i = 0; i < itemsLine.length - 1; i++) {
+            data += "<tr>";
+            data += "<td>" + itemsLine[i].split(",")[0] + "</td>";//item name
+            data += "<td>" + itemsLine[i].split(",")[1] + "</td>";//qty
+            data += "<td>$ " + itemsLine[i].split(",")[2] + "</td>";//total charge
+            data += "</tr>";
+        }
+               
+        data += "</table";//end table
+        
+        order_data.innerHTML = data;//data;
+        modal.click();
+    }
+</script>
+

@@ -1,0 +1,63 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .bg-info{background-color:darkgray;color:sienna;}
+</style>
+
+<h2>Your Ordered Items</h2>
+<div id="no_more_items"></div>
+<table class="table table-striped" id="ordered_items"></table>
+
+<script>
+    if ('@Session["userName"]' == null) {
+        back_to_shop();        
+    }
+
+    let cookieArray = document.cookie.toString().trim().split(";");
+    if (cookieArray.length <= 2) {
+        document.getElementById("no_more_items").className ="bg-info";
+        document.getElementById("no_more_items").innerHTML = "<h3>No more already orders</h3>";
+        back_to_shop();
+    }
+    
+
+    var ordered_items = document.getElementById("ordered_items");
+    let table_result = "<tr><th>Name</th><th>Quantity</th><th>Price</th><th>Total</th></tr>";
+
+
+    
+
+    for (var i = 0; i < cookieArray.length; i++) {
+        let name = cookieArray[i].trim().split("=")[0].toString();
+        if (name.localeCompare('@Session["userName"]') == 0) {
+            let data = cookieArray[i].trim().split("=")[1];
+            DisplayOrderedItems(data);
+        }
+
+    }
+
+    function DisplayOrderedItems(_value) {
+        var laptops_data = _value.trim().split("&");
+        for (var i = 0; i < laptops_data.length - 1; i++) {
+            let name = laptops_data[i].trim().split("/")[0];
+            let price = laptops_data[i].trim().split("/")[1];
+            let qty = laptops_data[i].trim().split("/")[2];
+            let model = laptops_data[i].trim().split("/")[3];
+            table_result += "<td><h4>" + name + "</h4><br><p>" + model + "</p></td>";
+            table_result += "<td>" + qty + "</td>";
+            table_result += "<td>$ " + price + "</td>";
+            table_result += "<td>$ " + (qty * price) + "</td>";
+            table_result += "</tr>";
+        }
+        table_result += "<tr><td><button class='btn btn-success' onclick='back_to_shop()'>Back to Shop</button></td></tr>";
+        table_result += "</table>";
+        ordered_items.innerHTML = table_result;
+    }
+
+    function back_to_shop() {
+        document.location = '@Url.Action("Products","Laptops", new { id = Session["UserChoice"] })';
+    }
+</script>
+

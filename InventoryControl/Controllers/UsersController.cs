@@ -18,14 +18,22 @@ namespace InventoryControl.Controllers
         // GET: Users
         public ActionResult Index()
         {
-
             return View(db.Users.ToList());
-            //return View();
         }
 
         public ActionResult Success()
         {
             return View();
+        }
+
+        public ActionResult Products()
+        {
+            return RedirectToAction("Products", "Laptops");
+        }
+
+        public ActionResult Profile(string id)
+        {
+            return RedirectToAction("Details", "Users", new { id = id });
         }
 
         // GET: Users/Details/5
@@ -54,7 +62,7 @@ namespace InventoryControl.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "User_ID,UserName,Password,Age,Gender,Phno,Address")] User user)
+        public ActionResult Create([Bind(Include = "User_ID,UserName,Password,DOB,Gender,Phno,Address")] User user)
         {
             if (ModelState.IsValid)
             {
@@ -74,6 +82,7 @@ namespace InventoryControl.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             User user = db.Users.Find(id);
+            
             if (user == null)
             {
                 return HttpNotFound();
@@ -86,13 +95,13 @@ namespace InventoryControl.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "User_ID,UserName,Password,Age,Gender,Phno,Address")] User user)
+        public ActionResult Edit([Bind(Include = "User_ID,UserName,Password,DOB,Gender,Phno,Address")] User user)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(user).State = EntityState.Modified;
+                db.Entry(user).State = EntityState.Modified;                
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Products", "Laptops");
             }
             return View(user);
         }

@@ -8,7 +8,7 @@ using System.Web;
 
 namespace InventoryControl.DAL
 {
-    public class InventoryContext: DbContext
+    public class InventoryContext : DbContext
     {
 
         public InventoryContext() : base("InventoryContext")
@@ -19,7 +19,12 @@ namespace InventoryControl.DAL
         public DbSet<User> Users { get; set; }
         public DbSet<Laptop> Laptops { get; set; }
 
-        public DbSet<Student> Students { get; set; }
+        public DbSet<Admin> Admin { get; set; }
+
+        public DbSet<Orders> Orders { get; set; }
+        
+
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
