@@ -16,6 +16,6 @@
 	- print voucher for order
 
 	
-![Screenshot](https://github.com/mtstorehub/Laptop-Inventory-Control/blob/master/dist/screenshots/ss001.PNG)
-![Screenshot](https://github.com/mtstorehub/Laptop-Inventory-Control/blob/master/dist/screenshots/ss002.PNG)
-![Screenshot](https://github.com/mtstorehub/Laptop-Inventory-Control/blob/master/dist/screenshots/ss003.PNG)
+![Screenshot](https://github.com/mtstorehub/Laptop-Inventory-Control/tree/master/dist/screenshots/ss001.PNG)
+![Screenshot](https://github.com/mtstorehub/Laptop-Inventory-Control/tree/master/dist/screenshots/ss002.PNG)
+![Screenshot](https://github.com/mtstorehub/Laptop-Inventory-Control/tree/master/dist/screenshots/ss003.PNG)
